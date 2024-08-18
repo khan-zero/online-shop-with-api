@@ -1,6 +1,6 @@
 from django.db import models, transaction
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser, Group, Permission
 
 class Banner(models.Model):
     title = models.CharField(max_length=255)
@@ -147,3 +147,29 @@ class FooterBottom(models.Model):
 
 class FooterBottomImg(models.Model):
     img = models.ImageField(upload_to='media/footer_bottom')
+    
+    
+    
+    
+    
+    
+class CustomUser(AbstractUser):
+    username = models.CharField(max_length=16)
+    password = models.CharField(max_length=20)
+    email = models.EmailField()
+
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name='customuser_set',  # Add this line
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='customuser_set_permissions',  # Add this line
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )

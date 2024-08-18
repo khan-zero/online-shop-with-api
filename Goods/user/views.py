@@ -1,6 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+
+from rest_framework import generics
+
 from Goods import models
+from API.serializers import CartSerializer
 
 @login_required(login_url='login')
 def myCart(request):
@@ -83,9 +88,22 @@ def CreateOrder(request, id):
         cart.save()
         return render(request, 'user/order.html')
     return redirect('mycart')
+
+
 @login_required(login_url='login')
 def wishlist(request):
     wish_list = models.Wishlist.objects.filter(user=request.user)
     context = {}
     context['wishlist']=wish_list
     return render(request, 'user/wishlist.html', context)
+
+
+@method_decorator(login_required(login_url='login'), name = 'dispatch')
+class MyCartAPIView(generics.ListCreateAPIView):
+    queryset = models.Cart.objects.all()
+    serializer_class = CartSerializer
+
+@method_decorator(login_required(login_url='login'), name = 'dispatch')
+class MyCartRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Cart.objects.all()
+    serializer_class = CartSerializer

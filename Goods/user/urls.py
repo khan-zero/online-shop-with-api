@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -8,4 +9,7 @@ urlpatterns = [
     path('delete/<int:id>/', views.deleteProductCart, name='delete'),
     path('order/<int:id>/', views.CreateOrder, name='createOrder'),
     path('wishlist/', views.wishlist, name='wishlist'),
+
+    path('my-cart-api', views.MyCartAPIView.as_view(), name = 'category-list'),
+    path('my-cart-api/<int:pk>/', views.MyCartRetrieveUpdateDestroyAPIView.as_view(), name = 'category-list'),
 ]
